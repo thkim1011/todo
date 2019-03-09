@@ -3,21 +3,66 @@ Main file for program.
 """
 import os
 import json 
-import entry 
-import date 
+from todo.entry import Entry
+from todo.date import Date
+import datetime
 
 def add_entry():
     """
+    description, deadline, priority
     Adds a new entry
     """
-    newDate = date()
-    pass
+    time_created = datetime.datetime.now()
+    date_created = (Date(time_created.year, time_created.month, time_created.day,
+            time_created.hour, time_created.minute, time_created.second))
+    description = input("Enter the task:") 
+    #not sure if it should be y/m/d m/d/y or y/m/d
+    deadline = input("What is the deadline (y/m/d):") 
+    priority = input("Enter the priority (0,1,2):")
+    tuple_deadline = parseDate(deadline)
+    date_deadline = Date(tuple_deadline[0], tuple_deadline[1], tuple_deadline[2])
+
+    entry = Entry(dscription, date_deadline, priority, int(priority), date_created)
+
+def parseDate(deadline):
+    year =  0
+    month = 0 
+    day = 0
+
+    search = 0
+    index = 0
+    while len(deadline) > 0: 
+        if deadline[index] == "/" or deadline[index] == "-": 
+            if search == 0: 
+                year = deadline[:index]
+            elif search == 1:
+                month = deadline[:index]
+            elif search == 2:
+                day = deadline[:index]
+            deadline = deadline[index:]
+            search += 1
+            index = 0
+        else: 
+            index  += 1
+    return year, month, day
 
 def list_entries():
     """
     Lists all entries
     """
-    pass
+    priority0 = []
+    priority1 = [] 
+    priority2 = [] 
+    if os.path.isfile("~/todo.json"):
+        with open('~/todo.json') as f:
+            data = json.load(f)
+        for entry in data: 
+            if entry["priority"] == 0:
+                priority0.append(entry)
+            elif entry["priority"] == 1:
+                priority1.append(entry)
+            else:
+                priority2.append(entry)
 
 def edit_entry():
     """
@@ -29,13 +74,14 @@ def remove_entry():
     """
     Removes an entry
     """
-    pass
+    if os.path.isfile("~/todo.json"):
+        with open('~/todo.json') as f:
+            data = json.load(f)
 
-def mark_complete():
+def mark_complete(entry):
     """
     Mark a task as completed
     """
-    pass
 
 def main():
     """
