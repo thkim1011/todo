@@ -2,11 +2,15 @@
 Main file for program. 
 """
 import os
+import json 
+import entry 
+import date 
 
 def add_entry():
     """
     Adds a new entry
     """
+    newDate = date()
     pass
 
 def list_entries():
@@ -40,4 +44,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
