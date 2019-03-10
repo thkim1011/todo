@@ -1,16 +1,25 @@
 """
 Main file for program. 
 """
-import os
-import json 
-import entry 
-import date 
+import sys
+
+def help():
+    """
+    Prints out the help text!
+    """
+    print("USAGE: todo [COMMAND]") 
+    print("COMMAND:")
+    help_dict = {
+        "help": "Prints out the help text.",
+        "add": "Adds a new entry.",
+        "list": "Lists out all the todo entries.",
+        "edit": "Edit an entry.",
+    }
 
 def add_entry():
     """
     Adds a new entry
     """
-    newDate = date()
     pass
 
 def list_entries():
@@ -44,3 +53,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

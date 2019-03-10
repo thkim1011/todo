@@ -1,7 +1,6 @@
-import json 
-
 class Date:
     """
+    Date object for entries. 
     """
     def __init__(self, year, month, day, hour, minute):
         self.year = year 
@@ -10,12 +9,25 @@ class Date:
         self.hour = hour
         self.minute = minute
 
-    def __lt__(other_date):
+    def __lt__(self, other_date):
         pass
 
-    def json_out(self):
-        """ 
-        creeate 
+    def __str__(self):
         """
-        return self.__dict__
-
+        Prints out the string representation of a given date. 
+        """
+        months = ["January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"]
+        return str(months[self.month - 1]) + " "\
+                + str(self.day) + ", "\
+                + str(self.year)

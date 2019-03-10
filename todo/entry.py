@@ -1,5 +1,5 @@
 import json
-import date
+import todo.date
 
 def json_to_entry(json_str):
     """
@@ -36,5 +36,5 @@ class Entry:
         >>> entry.json_out()
         {'description': 'Math Homework', 'deadline': ... }
         """
-        return json.dumps(self, default= lambda o: getattr(o, '__dict__',str(o)))
+        return json.dumps(self, default=lambda o: getattr(o, '__dict__', o))
 
