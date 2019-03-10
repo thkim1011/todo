@@ -7,7 +7,7 @@ import json
 from todo.entry import Entry
 from todo.date import Date
 import datetime
-from collection import OrderedDict
+from collections import OrderedDict
 
 def print_help():
     """
