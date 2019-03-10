@@ -2,7 +2,7 @@ class Date:
     """
     Date object for entries. 
     """
-    def __init__(self, year, month, day, hour, minute, second = 0):
+    def __init__(self, year, month, day = None, hour = None, minute = None, second = None):
         """ 
         second is only useful for tracking the time ENTRY was created
         """

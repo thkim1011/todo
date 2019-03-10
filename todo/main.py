@@ -36,7 +36,12 @@ def add_entry():
     tuple_deadline = parseDate(deadline)
     date_deadline = Date(tuple_deadline[0], tuple_deadline[1], tuple_deadline[2])
 
-    entry = Entry(dscription, date_deadline, priority, int(priority), date_created)
+    entry = Entry(description, date_deadline, priority, int(priority), date_created)
+    json_entry = entry.json_out() 
+
+    home = os.path.expanduser("~")
+    file = open(home + "/.todo.json", "a")
+    file.write(json_entry)
 
 def parseDate(deadline):
     year =  0
@@ -64,6 +69,7 @@ def list_entries():
     """
     Lists all entries
     """
+
     priority0 = []
     priority1 = [] 
     priority2 = [] 
@@ -88,9 +94,12 @@ def remove_entry():
     """
     Removes an entry
     """
-    if os.path.isfile("~/todo.json"):
-        with open('~/todo.json') as f:
-            data = json.load(f)
+    home = os.path.expanduser("~")
+    file = open(home + "/.todo.json", "a")
+    file.write(json_entry)
+
+    with open() as f:
+        data = json.load(f)
 
 def mark_complete(entry):
     """
