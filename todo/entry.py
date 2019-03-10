@@ -13,10 +13,9 @@ class Entry:
     Entry class.
     """
 
-    def __init__(self, description, deadline, priority):
+    def __init__(self, description, deadline, priority, date_created, completed = False):
         """
         Constructs a new entry for the Todo List.
-
         description -- Description of the task to be finished 
         deadline -- Date object representing deadline
         priority -- Integer among 0, 1, 2 describing priority
@@ -24,6 +23,9 @@ class Entry:
         self.description = description
         self.deadline = deadline
         self.priority = priority
+        self.priority = priority 
+        self.completed = completed 
+        self.date_created = date_created
 
     def __str__(self):
         pass
@@ -37,4 +39,3 @@ class Entry:
         {'description': 'Math Homework', 'deadline': ... }
         """
         return json.dumps(self, default=lambda o: getattr(o, '__dict__', o))
-
