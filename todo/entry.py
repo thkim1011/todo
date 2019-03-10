@@ -1,5 +1,4 @@
 import json
-import todo.date
 
 def json_to_entry(json_str):
     """

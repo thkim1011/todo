@@ -9,6 +9,10 @@ from todo.date import Date
 import datetime
 from collections import OrderedDict
 
+priority0 = []
+priority1 = [] 
+priority2 = [] 
+
 def print_help():
     """
     Prints out the help text!
@@ -44,6 +48,7 @@ def add_entry():
     json_entry = entry.json_out() 
 
     home = os.path.expanduser("~")
+    print(home) 
     file = open(home + "/.todo.json", "a")
     file.write(json_entry)
 
@@ -74,12 +79,10 @@ def list_entries():
     Lists all entries
     """
 
-    priority0 = []
-    priority1 = [] 
-    priority2 = [] 
-    if os.path.isfile("~/todo.json"):
-        with open('~/todo.json') as f:
-            data = json.load(f)
+    home = os.path.expanduser("~")
+
+    with open(home + "/.todo.json") as f:
+        data = json.load(f)
         for entry in data: 
             if entry["priority"] == 0:
                 priority0.append(entry)
@@ -87,22 +90,28 @@ def list_entries():
                 priority1.append(entry)
             else:
                 priority2.append(entry)
+    priorities = ["HIGH PRIORITY", "MEDIUM PRIORITY", "LOW PRIORITY"]
+    for iter in range(3):
+        print(priorities[iter])
+        for index, entry in enumerate(priority1, 1):
+            deadline = entry["deadline"] 
+            print(index + ".", str(deadline["month"] + "/" str(deadline["day"] + "/" + \
+                str(deadline["year"]))
 
 def edit_entry():
     """
     Edits an entry
     """
-    pass
+    global priority0, priority1, priority2 
+    row = input("Provide current priority:") 
+    index  = input("Provide current Index of list:") 
 
 def remove_entry():
     """
     Removes an entry
     """
     home = os.path.expanduser("~")
-    file = open(home + "/.todo.json", "a")
-    file.write(json_entry)
-
-    with open() as f:
+    with open(home + "/.todo.json") as f:
         data = json.load(f)
 
 def mark_complete(entry):
