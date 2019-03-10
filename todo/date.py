@@ -13,6 +13,9 @@ class Date:
         self.minute = minute
 
     def __lt__(self, other_date):
+        """
+        Compares two dates.
+        """
         pass
 
     def __str__(self):
