@@ -13,7 +13,7 @@ class Entry:
     Entry class.
     """
 
-    def __init__(self, description, deadline, priority, date_created, completed = False):
+    def __init__(self, description,priority, date_created, deadline = None, completed = False):
         """
         Constructs a new entry for the Todo List.
         description -- Description of the task to be finished 
