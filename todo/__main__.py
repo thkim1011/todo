@@ -4,6 +4,7 @@ Main file for program.
 import sys
 import os
 import json 
+import re
 from todo.entry import Entry
 from todo.date import Date
 import datetime
@@ -31,48 +32,36 @@ def print_help():
 
 def add_entry():
     """
-    description, deadline, priority
-    Adds a new entry
+    Adds a new entry to our todo list. The main effect of this function is to
+    query the user for the specific data associated with an entry (that is,
+    description, deadline, and priority), and appends this to ~/.todo.json.
+    Recall that the structure of ~/.todo.json is a list of Entry objects
+    in json format. 
     """
-    time_created = datetime.datetime.now()
-    date_created = (Date(time_created.year, time_created.month, time_created.day,
-            time_created.hour, time_created.minute, time_created.second))
-    description = input("Enter the task:") 
-    #not sure if it should be y/m/d m/d/y or y/m/d
-    deadline = input("What is the deadline (y/m/d):") 
-    priority = input("Enter the priority (0,1,2):")
-    tuple_deadline = parseDate(deadline)
+    #time_created = datetime.datetime.now()
+    #date_created = (Date(time_created.year, time_created.month, time_created.day,
+    #        time_created.hour, time_created.minute, time_created.second))
+    description = input("Enter the task: ") 
+    deadline_date = input("What is the deadline date (MM/DD/YY): ") 
+    deadline_time = input("What is the deadline time (HH:MM (AM/PM)): ")
+    priority = input("Enter the priority (0,1,2): ")
+    tuple_deadline = parse_date(deadline_date)
     date_deadline = Date(tuple_deadline[0], tuple_deadline[1], tuple_deadline[2])
 
-    entry = Entry(description, date_deadline, priority, int(priority), date_created)
+    entry = Entry(description, priority, date_deadline, int(priority))
     json_entry = entry.json_out() 
 
     home = os.path.expanduser("~")
-    print(home) 
-    file = open(home + "/.todo.json", "a")
-    file.write(json_entry)
+    with open(home + "/.todo.json", "a") as file:
+        file.write(json_entry)
 
-def parseDate(deadline):
-    year =  0
-    month = 0 
-    day = 0
-
-    search = 0
-    index = 0
-    while len(deadline) > 0: 
-        if deadline[index] == "/" or deadline[index] == "-": 
-            if search == 0: 
-                year = deadline[:index]
-            elif search == 1:
-                month = deadline[:index]
-            elif search == 2:
-                day = deadline[:index]
-            deadline = deadline[index:]
-            search += 1
-            index = 0
-        else: 
-            index  += 1
-    return year, month, day
+def parse_date(deadline_date):
+    """
+    Given a date in the form MM/DD/YY or MM/DD/YYYY, returns
+    the integers MM, DD, and YYYY (or YY) in this order.
+    """
+    deadline_split = re.split('\\/|\\-', deadline_date)
+    return int(deadline_split[0]), int(deadline_split[1]), int(deadline_split[2])
 
 def list_entries():
     """
@@ -124,6 +113,9 @@ def main():
     """
     Main function for program. 
     """
+    if len(sys.argv) == 1:
+        print_help()
+        return
     command = sys.argv[1]
     if command == "help":
         print_help()
