@@ -1,8 +1,20 @@
+def json_to_date(json_date):
+    """
+    Converts json object to a Date object.
+    >>> print(json_to_date({"year": 2019, "month": 10, "day": 12, "hour": None, "minute": None}))
+    October 12, 2019
+    """
+    return Date(year=json_date["year"],
+            month=json_date["month"],
+            day=json_date["day"],
+            hour=json_date["hour"],
+            minute=json_date["minute"])
+
 class Date:
     """
     Date object for entries. 
     """
-    def __init__(self, year, month, day = None, hour = None, minute = None, second = None):
+    def __init__(self, year, month, day=None, hour=None, minute=None):
         """ 
         second is only useful for tracking the time ENTRY was created
         """

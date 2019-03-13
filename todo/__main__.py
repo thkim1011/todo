@@ -1,11 +1,25 @@
 """
-Main file for program. 
+Main file for the program. The project todo is mainly a terminal-based
+todo list. 
+
+The first two functions of the __main__.py file are for loading and saving
+the ~/.todo.json file. This file has all the data associated with the user,
+and the basic effect of the program is to load the file when executed and
+save the file before finishing. These two jobs are handled by the load_entries
+and save_entries functions.
+
+The next few functions implement the basic commands of the program itself.
+TODO: Finish this descriptive comment!
+
+Some of the things that needs to be implemented are the following.
+* Save checkpoints of the entries file because if the program were to crash
+for some reason, then we don't want to lose all of the data. 
 """
 import sys
 import os
 import json 
 import re
-from todo.entry import Entry
+from todo.entry import Entry, json_to_entry
 from todo.date import Date
 import datetime
 from collections import OrderedDict
@@ -16,6 +30,41 @@ import curses.textpad
 priority0 = []
 priority1 = [] 
 priority2 = [] 
+
+# Global entries variable!
+entries = []
+
+
+def load_entries():
+    """
+    Looks for the ~/.todo.json file and saves the list of entries
+    stored in the file to the global variable ``entries". 
+    The function assumes that the file is a list of jsonified entries. 
+    """
+    global entries
+    home = os.path.expanduser("~")
+    with open(home + "/.todo.json", "r") as f:
+        json_object = json.load(f)
+
+    # Since json_object is a list of entries...
+    for json_entry in json_object:
+        entries.append(json_to_entry(json_entry))
+
+def save_entries():
+    """
+    Takes the global variable ``entries" and saves the list of entries
+    to the file ~/.todo.json. 
+    """
+    home = os.path.expanduser("~")
+    with open(home + "/.todo.json", "w") as f:
+        f.write(jsonify(entries))
+
+
+def jsonify(obj):
+    """
+    Takes any object and returns the json representation of the object.
+    """
+    return json.dumps(obj, default=lambda o: getattr(o, '__dict__', o))
 
 def print_help():
     """
@@ -40,7 +89,7 @@ def add_entry():
     query the user for the specific data associated with an entry (that is,
     description, deadline, and priority), and appends this to ~/.todo.json.
     Recall that the structure of ~/.todo.json is a list of Entry objects
-    in json format. 
+    in json format. Assume that all entries have been loaded.
     """
     #time_created = datetime.datetime.now()
     #date_created = (Date(time_created.year, time_created.month, time_created.day,
@@ -53,11 +102,8 @@ def add_entry():
     date_deadline = Date(tuple_deadline[0], tuple_deadline[1], tuple_deadline[2])
 
     entry = Entry(description, priority, date_deadline, int(priority))
-    json_entry = entry.json_out() 
+    entries.append(entry)
 
-    home = os.path.expanduser("~")
-    with open(home + "/.todo.json", "a") as file:
-        file.write(json_entry)
 
 def parse_date(deadline_date):
     """
@@ -274,6 +320,8 @@ def main():
     """
     Main function for program. 
     """
+    # Start the program by loading the entries
+    load_entries()
     if len(sys.argv) == 1:
         print_help()
         return
@@ -288,6 +336,8 @@ def main():
         list_entries()
     if command == "guil":
         curses.wrapper(draw_menu)
+    # End the program by saving the entries
+    save_entries()
 
 if __name__ == "__main__":
     main()

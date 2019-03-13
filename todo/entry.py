@@ -1,11 +1,14 @@
 import json
+from todo.date import json_to_date
 
-def json_to_entry(json_str):
+def json_to_entry(json_entry):
     """
     Converts json string to an Entry object.
     """
-    pass
-
+    date = json_to_date(json_entry["deadline"])
+    return Entry(json_entry["description"],
+            json_entry["priority"],
+            date, json_entry["completed"])
 
 class Entry:
     """
