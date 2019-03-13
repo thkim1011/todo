@@ -166,6 +166,7 @@ def draw_menu(stdscr):
         # Initialization
         stdscr.clear()
         height, width = stdscr.getmaxyx()
+        insert = True;
 
         if k == ord('j'):
             cursor_y = cursor_y + 1
@@ -175,6 +176,19 @@ def draw_menu(stdscr):
             cursor_x = cursor_x + 1
         elif k == ord('h'):
             cursor_x = cursor_x - 1
+        elif k == ord('d'):
+            insert = False
+        elif k == ord('i'):
+            # insert = True
+            #for editing text in the window
+            tb = curses.textpad.Textbox(stdscr, insert_mode=insert)
+            text = tb.edit()
+            curses.flash()
+            stdscr.clear()
+            stdscr.addstr(0, 0, text.encode('utf-8'))
+            stdscr.refresh()
+            stdscr.getch()
+
 
         cursor_x = max(0, cursor_x)
         cursor_x = min(width-1, cursor_x)
@@ -215,16 +229,6 @@ def draw_menu(stdscr):
                 start_list_y += 1
                 stdscr.addstr(start_list_y, 5, entry["description"])
                 start_list_y += 2
-
-        # win = curses.newwin(5, 60, 5, 10)
-
-        # tb = curses.textpad.Textbox(win, insert_mode=True)
-        # text = tb.edit()
-        # curses.flash()
-        # win.clear()
-        # win.addstr(0, 0, text.encode('utf-8'))
-        # win.refresh()
-        # win.getch()
 
         # Centering calculations
         start_x_title = int((width // 2) - (len(title) // 2) - len(title) % 2)
