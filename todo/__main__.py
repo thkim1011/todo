@@ -33,6 +33,10 @@ priority2 = []
 
 # Global entries variable!
 entries = []
+# The first character of they key signifies the priority and the 
+#preceding values signify the entry number for that priority
+# Example: {"H2":{entry}} 
+mapEntries = {} 
 
 
 def load_entries():
@@ -117,25 +121,26 @@ def list_entries():
     """
     Lists all entries
     """
-    global priority0 
-    global priority1 
-    global priority2 
+    global priority0, priority1, priority2 
     home = os.path.expanduser("~")
+    rows, width = os.popen('stty size', 'r').read().split()
 
     with open(home + "/.todo.json") as f:
         data = json.load(f)
-        print(data)
         for entry in data: 
-            print(entry)
-            if entry["priority"] == 0:
+            if entry["priority"] == "0":
                 priority0.append(entry)
-            elif entry["priority"] == 1:
+            elif entry["priority"] == "1":
                 priority1.append(entry)
             else:
                 priority2.append(entry)
     priorities = ["LOW PRIORITY", "MEDIUM PRIORITY","HIGH PRIORITY"]
     for iter in range(2, -1, -1):
-        print("PRIORITY get", priorities[iter])
+        upper_boarder = "_" * (int(width) - 1)
+        lower_boarder = "-" * (int(width) - 1)
+        print(upper_boarder)
+        print(priorities[iter])
+        print(lower_boarder)
         priority = None 
         if iter == 0: 
             priority = priority0 
@@ -156,13 +161,47 @@ def edit_entry():
     row = input("Provide current priority:") 
     index  = input("Provide current Index of list:") 
 
+def setup_priority_lists():
+    global priority0, priority1, priority2
+    home = os.path.expanduser("~")
+    with open(home + "/.todo.json") as f:
+        data = json.load(f)
+        for entry in data: 
+            if entry["priority"] == "0":
+                priority0.append(entry)
+            elif entry["priority"] == "1":
+                priority1.append(entry)
+            else:
+                priority2.append(entry)
+
 def remove_entry():
     """
     Removes an entry
     """
+    global priority0, priority1, priority2, entries
+    setup_priority_lists()
+
     home = os.path.expanduser("~")
     with open(home + "/.todo.json") as f:
         data = json.load(f)
+
+    remove_data = input("What is the entry to remove?")
+    remove_priority = remove_data[0]
+    remove_index = int(remove_data[1:])
+    if remove_priority == "h" or remove_priority == "H":
+        entry = priority2[remove_index - 1]
+    elif remove_priority == "m" or remove_priority == "M":
+        entry = priority1[remove_index - 1]
+    elif remove_priority == "l" or remove_priority == "L":
+        entry = priority0[remove_index - 1]
+
+    data.remove(entry)
+    entries = []
+    for entry in data:
+        entries.append(Entry(entry["description"],
+                        entry["priority"],
+                        entry["deadline"], entry["completed"]))
+
 
 def mark_complete(entry):
     """
@@ -336,6 +375,8 @@ def main():
         list_entries()
     if command == "guil":
         curses.wrapper(draw_menu)
+    if command == "remove":
+        remove_entry()
     # End the program by saving the entries
     save_entries()
 

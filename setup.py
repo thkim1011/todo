@@ -1,3 +1,7 @@
 import setuptools
-
+setuptools.setup(
+    name ='todo',
+    version="1.0",
+    packages=setuptools.find_packages()
+)
 
